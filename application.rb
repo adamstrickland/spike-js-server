@@ -1,21 +1,30 @@
 require 'sinatra/base'
+require 'sinatra/cross_origin'
 require 'json'
 require 'uuid'
+require 'faker'
 
-class SpikeJS < Sinatra::Base
+class SpikeJSServer < Sinatra::Base
+	# register Sinatra::CrossOrigin
+
+	# enable cross_origin
+	# configure do
+	# 	set :allow_origin, :any
+	# 	set :allow_methods, :any
+	# 	set :allow_credentials, true
+	# end
+
 	get '/' do
-	    # erb :index
-	    send_file File.join(settings.public_folder, 'index.html')
+		uuid = UUID.new
+		status 201
+		headers "Access-Control-Allow-Origin" => "*"
+		(0..20).map do |i|
+			{
+				id:uuid.generate,
+				text: Faker::Lorem.sentence(Random.rand(12))
+			}
+		end.to_json
 	end
-
-	# get '/message's do
-	#     content_type :json
-	# end
-
-	# post '/messages' do
-	#     content_type :json
-	#     m = JSON.parse(params[model]).merge(:id => UUID.new)
-	# end
 
 	run! if app_file == $0
 end

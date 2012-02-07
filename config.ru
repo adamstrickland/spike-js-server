@@ -1,2 +1,2 @@
 require './application.rb'
-run SpikeJS
+run SpikeJSServer
